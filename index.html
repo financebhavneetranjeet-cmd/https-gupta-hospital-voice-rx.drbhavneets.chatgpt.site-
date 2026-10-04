@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#8f2626" />
+  <title>Gupta Hospital Voice Prescription</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Gupta Rx" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar no-print">
+    <div>
+      <h1>Gupta Hospital — Voice Prescription</h1>
+      <div class="sub">Dictate → Review → Print / Save PDF</div>
+    </div>
+    <div class="toolbar">
+      <button id="installBtn" class="install hidden">Install App</button>
+      <button id="newBtn">New Patient</button>
+      <button id="formatBtn">Format prescription</button>
+      <button id="undoFormatBtn" disabled>Undo formatting</button>
+      <button id="saveBtn">Save Visit</button>
+      <button id="printBtn" class="primary">Print / PDF</button>
+    </div>
+  </header>
+
+  <div id="installGuide" class="install-guide no-print hidden" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+    <div class="install-card">
+      <button id="closeInstallGuide" class="close" aria-label="Close">×</button>
+      <h2 id="installTitle">Install Gupta Rx</h2>
+      <p id="installText">Use your browser's install option to add Gupta Rx to your home screen.</p>
+      <button id="nativeInstallBtn" class="primary hidden">Install now</button>
+    </div>
+  </div>
+
+  <main class="workspace">
+    <aside class="panel no-print">
+      <section>
+        <h2>Patient</h2>
+        <div class="grid2">
+          <label>Name<input id="patientName" autocomplete="off"></label>
+          <label>Age<input id="age" autocomplete="off"></label>
+          <label>Sex<select id="sex"><option></option><option>Male</option><option>Female</option><option>Other</option></select></label>
+          <label>UHID / Phone<input id="uhid" autocomplete="off"></label>
+        </div>
+        <label>Date<input id="visitDate" type="date"></label>
+      </section>
+
+      <section>
+        <h2>Voice Dictation</h2>
+        <div class="grid2">
+          <label>Language<select id="lang"><option value="en-IN">English (India)</option><option value="hi-IN">Hindi</option><option value="pa-IN">Punjabi</option></select></label>
+          <label>Send speech to<select id="target"><option value="auto">Auto-detect section</option><option value="chief">Chief complaints</option><option value="allergy">Drug allergy</option><option value="exam">General examination</option><option value="past">Past history</option><option value="medrec">Medicine reconciliation</option><option value="invest">Investigations</option><option value="diagnosis">Provisional diagnosis</option><option value="rx">Prescription</option><option value="advice">Advice / Follow-up</option></select></label>
+        </div>
+        <button id="micBtn" class="mic">🎙 Start Dictation</button>
+        <div id="micStatus" class="status">Ready</div>
+        <textarea id="liveTranscript" rows="5" placeholder="Live transcript appears here. You can edit before inserting."></textarea>
+        <div class="toolbar wrap">
+          <button id="insertTranscript">Insert transcript</button>
+          <button id="clearTranscript">Clear</button>
+        </div>
+        <p class="hint">You can say section names, for example: “Chief complaints back pain for 3 months”, “BP 130 by 80”, “Diagnosis lumbar radiculopathy”, “Prescription etoricoxib 90 milligram once daily for 5 days”.</p>
+      </section>
+
+      <section>
+        <h2>Signature & Print</h2>
+        <label>Doctor name<input id="doctorName" value=""></label>
+        <label>Registration / designation<input id="doctorReg" value=""></label>
+        <label>Signature image<input id="signatureUpload" type="file" accept="image/*"></label>
+        <label>Stamp image<input id="stampUpload" type="file" accept="image/*"></label>
+        <label class="check"><input id="preprinted" type="checkbox"> Print on pre-printed Gupta Hospital letterhead (hide template image)</label>
+        <button id="clearSig">Remove saved signature/stamp</button>
+      </section>
+
+      <section>
+        <h2>Saved visits</h2>
+        <input id="searchVisits" placeholder="Search patient / phone / UHID">
+        <div id="visitList" class="visit-list"></div>
+      </section>
+    </aside>
+
+    <section class="sheet-wrap">
+      <div id="sheet" class="sheet">
+        <img class="template-bg" src="gupta-template.jpg" alt="Gupta Hospital prescription template" />
+
+        <div class="patient-strip overlay-text">
+          <span><b>Patient:</b> <span id="oName"></span></span>
+          <span><b>Age/Sex:</b> <span id="oAgeSex"></span></span>
+          <span><b>UHID/Phone:</b> <span id="oUhid"></span></span>
+          <span><b>Date:</b> <span id="oDate"></span></span>
+        </div>
+
+        <textarea class="field chief" id="chief" aria-label="Chief complaints"></textarea>
+        <textarea class="field allergy" id="allergy" aria-label="History of drug allergy"></textarea>
+        <textarea class="field exam" id="exam" aria-label="General examination"></textarea>
+        <textarea class="field past" id="past" aria-label="Past history"></textarea>
+        <textarea class="field medrec" id="medrec" aria-label="Medicine reconciliation"></textarea>
+        <textarea class="field invest" id="invest" aria-label="Investigations required"></textarea>
+        <textarea class="field diagnosis" id="diagnosis" aria-label="Provisional diagnosis"></textarea>
+        <textarea class="field rx" id="rx" aria-label="Prescription"></textarea>
+        <textarea class="field advice" id="advice" aria-label="Advice and follow-up"></textarea>
+
+        <div class="signature-box overlay-text">
+          <div id="docText"></div>
+          <img id="signatureImg" alt="" />
+          <img id="stampImg" alt="" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
