@@ -66,21 +66,6 @@ function cleanMedicalText(text){
   for(const [re,to] of replacements) out=out.replace(re,to);
   return out;
 }
-const clinicalIds=['chief','allergy','exam','past','medrec','invest','diagnosis','rx','advice'];
-let formatUndo=null;
-$('formatBtn').onclick=()=>{
-  formatUndo=Object.fromEntries(clinicalIds.map(id=>[id,$(id).value]));
-  for(const id of clinicalIds) $(id).value=formatDictation($(id).value,true);
-  updateOverlay();
-  $('undoFormatBtn').disabled=false;
-  $('micStatus').textContent='Formatting complete. Review medical terms and doses before printing.';
-};
-$('undoFormatBtn').onclick=()=>{
-  if(!formatUndo)return;
-  for(const id of clinicalIds) $(id).value=formatUndo[id];
-  formatUndo=null; $('undoFormatBtn').disabled=true;updateOverlay();
-};
-
 function normaliseForDuplicate(text){return cleanMedicalText(text).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
 function isDuplicateFinal(text){
   const key=normaliseForDuplicate(text);
@@ -230,10 +215,10 @@ loadImages();
 function currentRecord(){const r={id:Date.now(),savedAt:new Date().toISOString()};ids.forEach(id=>r[id]=$(id).value);return r}
 function getVisits(){try{return JSON.parse(localStorage.getItem('gupta_visits')||'[]')}catch{return []}}
 function renderVisits(){const q=$('searchVisits').value.toLowerCase().trim(); const rows=getVisits().filter(v=>!q||[v.patientName,v.uhid,v.visitDate].join(' ').toLowerCase().includes(q)).slice(0,50);$('visitList').innerHTML=''; rows.forEach(v=>{const d=document.createElement('div');d.className='visit-card';d.innerHTML='<b>'+escapeHtml(v.patientName||'Unnamed patient')+'</b>'+escapeHtml(v.visitDate||'')+' · '+escapeHtml(v.uhid||'');d.onclick=()=>loadRecord(v);$('visitList').appendChild(d)});}
-function loadRecord(v){formatUndo=null;$('undoFormatBtn').disabled=true;ids.forEach(id=>{if(v[id]!=null)$(id).value=v[id]});updateOverlay();window.scrollTo({top:0,behavior:'smooth'})}
+function loadRecord(v){ids.forEach(id=>{if(v[id]!=null)$(id).value=v[id]});updateOverlay();window.scrollTo({top:0,behavior:'smooth'})}
 $('saveBtn').onclick=()=>{const v=currentRecord();const all=getVisits();all.unshift(v);localStorage.setItem('gupta_visits',JSON.stringify(all.slice(0,500)));renderVisits();alert('Visit saved on this device.');};
 $('searchVisits').oninput=renderVisits;renderVisits();
-$('newBtn').onclick=()=>{formatUndo=null;$('undoFormatBtn').disabled=true;['patientName','age','sex','uhid','chief','allergy','exam','past','medrec','invest','diagnosis','rx','advice'].forEach(id=>$(id).value='');$('visitDate').value=today();$('liveTranscript').value='';latestTranscript='';activeSection='chief';recentFinals.length=0;lastFinal='';lastFinalAt=0;updateOverlay();};
+$('newBtn').onclick=()=>{['patientName','age','sex','uhid','chief','allergy','exam','past','medrec','invest','diagnosis','rx','advice'].forEach(id=>$(id).value='');$('visitDate').value=today();$('liveTranscript').value='';latestTranscript='';activeSection='chief';recentFinals.length=0;lastFinal='';lastFinalAt=0;updateOverlay();};
 $('printBtn').onclick=()=>{updateOverlay();const clipped=[...document.querySelectorAll('.field')].filter(e=>e.scrollHeight>e.clientHeight+2);if(clipped.length){alert('Please shorten text before printing in: '+clipped.map(e=>e.getAttribute('aria-label')).join(', ')+'. The letterhead has limited space.');clipped[0].focus();return;}window.print();};
 updateOverlay();
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{$('micStatus').textContent='Offline setup failed. Refresh while connected to the internet.';})}
