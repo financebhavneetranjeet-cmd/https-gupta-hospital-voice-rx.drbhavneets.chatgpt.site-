@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Gupta Hospital Voice Prescription",
+  "short_name": "Gupta Rx",
+  "description": "Voice-assisted OPD notes and prescription printing for Gupta Hospital",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#8f2626",
+  "categories": ["medical", "productivity"],
+  "icons": [
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+  ]
+}
