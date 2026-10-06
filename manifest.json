@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Gupta Hospital Voice Prescription",
-  "short_name": "Gupta Rx",
+  "name": "Easy Write",
+  "short_name": "Easy Write",
   "description": "Voice-assisted OPD notes and prescription printing for Gupta Hospital",
   "start_url": "./?source=pwa",
   "scope": "./",
